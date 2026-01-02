@@ -17,7 +17,7 @@
         input.error { border-color: var(--danger) !important; background: #FFF5F5; }
 
         .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 8px 0; }
-        .time-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 8px; margin: 8px 0; }
+        .time-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 8px; margin: 8px 0; }
         .btn-option { padding: 12px 5px; border: 2px solid #E2E8F0; border-radius: 12px; cursor: pointer; background: white; font-family: 'Kanit'; transition: 0.2s; font-size: 0.95rem; }
         .btn-option.active { border-color: var(--primary); background: #EEF2FF; color: var(--primary); font-weight: bold; }
         
@@ -32,7 +32,7 @@
         #text-timer { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
         .question { font-size: 5rem; font-weight: 800; margin: 5px 0; color: var(--dark); }
         .options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .option-btn { padding: 20px 5px; font-size: 1.6rem; border: none; background: #F1F5F9; border-radius: 16px; cursor: pointer; font-weight: 800; font-family: 'Kanit'; color: var(--dark); transition: 0.2s; }
+        .option-btn { padding: 20px 5px; font-size: 1.6rem; border: none; background: #F1F5F9; border-radius: 16px; cursor: pointer; font-weight: 800; font-family: 'Kanit'; color: var(--dark); }
         .btn-correct { background-color: var(--success) !important; color: white !important; }
         .btn-wrong { background-color: var(--danger) !important; color: white !important; }
 
@@ -47,8 +47,7 @@
         .log-table td { padding: 12px; border-bottom: 1px solid #F1F5F9; text-align: center; }
 
         .btn-main { width: 100%; padding: 16px; border-radius: 14px; border: none; font-size: 1.2rem; font-weight: bold; cursor: pointer; font-family: 'Kanit'; margin-top: 10px; }
-        .btn-start { background: var(--success); color: white; transition: 0.3s; }
-        .btn-start:hover { background: #059669; }
+        .btn-start { background: var(--success); color: white; }
         .btn-home { background: #64748B; color: white; }
         
         .footer-credits { margin-top: 25px; font-size: 0.8rem; color: #64748B; border-top: 1px solid #F1F5F9; padding-top: 15px; line-height: 1.5; text-align: center; }
@@ -62,12 +61,13 @@
     <h1 style="color: var(--primary); margin: 0 0 20px 0;">🎮 พร้อมตะลุยเกมสูตรคูณ</h1>
     <div class="form-group">
         <label>ชื่อ-นามสกุล <span style="color:red">*</span></label>
-        <input type="text" id="input-name" placeholder="ตัวอย่าง: ด.ช. ซูลกิฟลี ดอเลาะ">
+        <input type="text" id="input-name" placeholder="ด.ช. ซูลกิฟลี ดอเลาะ">
     </div>
     <div class="form-row">
         <div class="form-group"><label>ชั้น <span style="color:red">*</span></label><input type="text" id="input-class" placeholder="ป.6/1"></div>
         <div class="form-group"><label>เลขที่ <span style="color:red">*</span></label><input type="number" id="input-no" placeholder="1"></div>
     </div>
+    
     <div class="form-group">
         <label>เลือกระดับความยาก</label>
         <div class="btn-grid">
@@ -78,8 +78,9 @@
         </div>
         <div id="box-custom" class="hidden"><div class="multi-select-tables" id="list-tables"></div></div>
     </div>
+
     <div class="form-group">
-        <label>เวลาเล่น (วินาที)</label>
+        <label>เลือกเวลาเล่น (วินาที)</label>
         <div class="time-grid">
             <button class="btn-option t-btn" onclick="changeTime(60)">60</button>
             <button class="btn-option t-btn" onclick="changeTime(90)">90</button>
@@ -88,7 +89,7 @@
             <button class="btn-option t-btn" onclick="changeTime(180)">180</button>
         </div>
     </div>
-    <button class="btn-main btn-start" onclick="beginGame()">เริ่มเล่นเกม</button>
+    <button class="btn-main btn-start" onclick="beginGame()">เริ่มเล่น</button>
 
     <div class="footer-credits">
         ออกแบบและพัฒนาโดย...<br>
@@ -104,7 +105,6 @@
     <div style="text-align:left; margin-bottom:10px;"><span id="text-timer">0</span> วินาที</div>
     <div class="question" id="text-quest">? × ?</div>
     <div id="grid-options" class="options-grid"></div>
-    <button class="btn-main btn-home" style="margin-top:20px; font-size: 0.9rem;" onclick="goHome()">🏠 กลับหน้าหลัก</button>
 </div>
 
 <div class="container hidden" id="screen-result">
@@ -116,151 +116,71 @@
         <div class="stat-card" style="color:var(--danger);"><span style="font-size:0.8rem;">ผิด</span><div class="stat-value" id="final-w">0</div></div>
     </div>
     <div class="log-container"><table class="log-table"><thead><tr><th>ข้อ</th><th>โจทย์</th><th>ตอบ</th><th>ผล</th></tr></thead><tbody id="log-body"></tbody></table></div>
-    <button class="btn-main btn-home" onclick="goHome()">🏠 เล่นใหม่อีกครั้ง</button>
+    <button class="btn-main btn-home" onclick="goHome()">🏠 กลับหน้าหลัก</button>
 </div>
 
 <script>
     let gMode = 'all'; let gTables = []; let gSec = 120; let gTimer; let gStats = { t:0, c:0, w:0 }; let gAns = 0; let gLogs = []; let isProcessing = false;
 
-    // สร้างปุ่มแม่สูตรคูณ 2-12
     const tableBox = document.getElementById('list-tables');
     for(let i=2; i<=12; i++) {
         const s = document.createElement('span'); s.className = 'chip-table'; s.innerText = `แม่ ${i}`;
-        s.onclick = () => { 
-            if(gTables.includes(i)) { gTables = gTables.filter(x => x!==i); s.classList.remove('active'); } 
-            else { gTables.push(i); s.classList.add('active'); } 
-        };
+        s.onclick = () => { if(gTables.includes(i)) { gTables = gTables.filter(x => x!==i); s.classList.remove('active'); } else { gTables.push(i); s.classList.add('active'); } };
         tableBox.appendChild(s);
     }
 
-    function changeMode(m) { 
-        gMode = m; 
-        document.querySelectorAll('.btn-grid .btn-option').forEach(b => b.classList.remove('active')); 
-        document.getElementById('m-'+m).classList.add('active'); 
-        document.getElementById('box-custom').classList.toggle('hidden', m !== 'custom'); 
-    }
-
-    function changeTime(t) { 
-        gSec = t; 
-        document.querySelectorAll('.t-btn').forEach(c => c.classList.toggle('active', parseInt(c.innerText) === t)); 
-    }
-
-    function goHome() { 
-        clearInterval(gTimer); 
-        document.getElementById('screen-game').classList.add('hidden'); 
-        document.getElementById('screen-result').classList.add('hidden'); 
-        document.getElementById('screen-setup').classList.remove('hidden'); 
-        isProcessing = false;
-    }
+    function changeMode(m) { gMode = m; document.querySelectorAll('.btn-grid .btn-option').forEach(b => b.classList.remove('active')); document.getElementById('m-'+m).classList.add('active'); document.getElementById('box-custom').classList.toggle('hidden', m !== 'custom'); }
+    function changeTime(t) { gSec = t; document.querySelectorAll('.t-btn').forEach(c => c.classList.toggle('active', parseInt(c.innerText) === t)); }
+    function goHome() { clearInterval(gTimer); document.getElementById('screen-game').classList.add('hidden'); document.getElementById('screen-result').classList.add('hidden'); document.getElementById('screen-setup').classList.remove('hidden'); isProcessing = false; }
 
     function beginGame() {
-        const nInp = document.getElementById('input-name');
-        const cInp = document.getElementById('input-class');
-        const noInp = document.getElementById('input-no');
-
-        if(!nInp.value.trim() || !cInp.value.trim() || !noInp.value.trim()) { 
-            nInp.classList.toggle('error', !nInp.value.trim());
-            cInp.classList.toggle('error', !cInp.value.trim());
-            noInp.classList.toggle('error', !noInp.value.trim());
-            alert('กรุณากรอกข้อมูลให้ครบถ้วนก่อนเริ่มเล่นครับ');
-            return; 
-        }
-
-        gStats = { t:0, c:0, w:0 }; gLogs = []; isProcessing = false;
+        const nInput = document.getElementById('input-name'); const cInput = document.getElementById('input-class'); const noInput = document.getElementById('input-no');
+        if(!nInput.value.trim() || !cInput.value.trim() || !noInput.value.trim()) { alert('กรุณากรอกข้อมูลให้ครบถ้วน'); return; }
+        gStats = { t:0, c:0, w:0 }; gLogs = [];
         let pool = (gMode === 'easy' ? [2,3,4,5,10] : (gMode === 'hard' ? [6,7,8,9,11,12] : (gMode === 'all' ? [2,3,4,5,6,7,8,9,10,11,12] : gTables)));
-        
-        if (gMode === 'custom' && gTables.length === 0) {
-            alert('โปรดเลือกแม่สูตรคูณอย่างน้อย 1 แม่ครับ');
-            return;
-        }
-
-        document.getElementById('screen-setup').classList.add('hidden'); 
-        document.getElementById('screen-game').classList.remove('hidden');
-        renderHeader(); 
-        startTimer(pool); 
-        nextQuestion(pool);
+        if (gMode === 'custom' && gTables.length === 0) { alert('โปรดเลือกแม่สูตรคูณ'); return; }
+        document.getElementById('screen-setup').classList.add('hidden'); document.getElementById('screen-game').classList.remove('hidden');
+        renderHeader(); startTimer(pool); nextQuestion(pool);
     }
 
     function renderHeader() {
-        document.getElementById('panel-header').innerHTML = `
-            <div>ชื่อ: <b>${document.getElementById('input-name').value}</b></div>
-            <div>เวลา: <b>${gSec} วินาที</b></div>
-            <div class="full-width-stats">
-                <span>ข้อที่: <b id="live-t">0</b></span>
-                <span>ถูก: <b style="color:#4ADE80" id="live-c">0</b></span>
-                <span>ผิด: <b style="color:#F87171" id="live-w">0</b></span>
-            </div>`;
+        document.getElementById('panel-header').innerHTML = `<div>ชื่อ: <b>${document.getElementById('input-name').value}</b></div><div>เวลา: <b>${gSec} วินาที</b></div><div class="full-width-stats"><span>ทั้งหมด: <b id="live-t">0</b></span><span>ถูก: <b style="color:#4ADE80" id="live-c">0</b></span><span>ผิด: <b style="color:#F87171" id="live-w">0</b></span></div>`;
     }
 
     function startTimer(pool) {
-        let remain = gSec; 
-        const bar = document.getElementById('progress-bar');
-        document.getElementById('text-timer').innerText = remain;
+        let remain = gSec; const bar = document.getElementById('progress-bar');
         clearInterval(gTimer);
         gTimer = setInterval(() => {
-            remain--; 
-            bar.style.width = (remain/gSec)*100 + "%"; 
-            document.getElementById('text-timer').innerText = (remain < 0 ? 0 : remain);
+            remain--; bar.style.width = (remain/gSec)*100 + "%"; document.getElementById('text-timer').innerText = (remain < 0 ? 0 : remain);
             if(remain <= 0) { clearInterval(gTimer); endBattle(); }
         }, 1000);
     }
 
     function nextQuestion(pool) {
         isProcessing = false;
-        const n1 = pool[Math.floor(Math.random() * pool.length)]; 
-        const n2 = Math.floor(Math.random() * 12) + 1;
-        gAns = n1 * n2; 
-        document.getElementById('text-quest').innerText = `${n1} × ${n2}`;
-        
-        let opts = new Set([gAns]); 
-        while(opts.size < 6) { 
-            let fake = gAns + (Math.floor(Math.random() * 20) - 10); 
-            if(fake > 0 && fake !== gAns) opts.add(fake); 
-        }
-        
-        const box = document.getElementById('grid-options'); 
-        box.innerHTML = '';
+        const n1 = pool[Math.floor(Math.random() * pool.length)]; const n2 = Math.floor(Math.random() * 12) + 1;
+        gAns = n1 * n2; document.getElementById('text-quest').innerText = `${n1} × ${n2}`;
+        let opts = new Set([gAns]); while(opts.size < 6) { let fake = gAns + (Math.floor(Math.random() * 20) - 10); if(fake > 0 && fake !== gAns) opts.add(fake); }
+        const box = document.getElementById('grid-options'); box.innerHTML = '';
         Array.from(opts).sort(() => Math.random()-0.5).forEach(o => {
-            const btn = document.createElement('button'); 
-            btn.className = 'option-btn'; 
-            btn.innerText = o;
+            const btn = document.createElement('button'); btn.className = 'option-btn'; btn.innerText = o;
             btn.onclick = () => {
-                if(isProcessing) return; 
-                isProcessing = true;
-                const isCorrect = (o === gAns); 
-                gStats.t++;
+                if(isProcessing) return; isProcessing = true;
+                const isCorrect = (o === gAns); gStats.t++;
                 gLogs.push({ q: `${n1} × ${n2}`, user: o, res: isCorrect });
-                
-                if(isCorrect) { 
-                    gStats.c++; 
-                    btn.classList.add('btn-correct'); 
-                    setTimeout(() => nextQuestion(pool), 200); 
-                } else { 
-                    gStats.w++; 
-                    btn.classList.add('btn-wrong'); 
-                    setTimeout(() => nextQuestion(pool), 400); 
-                }
-                document.getElementById('live-t').innerText = gStats.t; 
-                document.getElementById('live-c').innerText = gStats.c; 
-                document.getElementById('live-w').innerText = gStats.w;
+                if(isCorrect) { gStats.c++; btn.classList.add('btn-correct'); setTimeout(() => nextQuestion(pool), 200); } 
+                else { gStats.w++; btn.classList.add('btn-wrong'); setTimeout(() => nextQuestion(pool), 400); }
+                document.getElementById('live-t').innerText = gStats.t; document.getElementById('live-c').innerText = gStats.c; document.getElementById('live-w').innerText = gStats.w;
             };
             box.appendChild(btn);
         });
     }
 
     function endBattle() {
-        document.getElementById('screen-game').classList.add('hidden'); 
-        document.getElementById('screen-result').classList.remove('hidden');
-        document.getElementById('box-report').innerHTML = `
-            <b>ชื่อ:</b> ${document.getElementById('input-name').value}<br>
-            <b>ชั้น/เลขที่:</b> ${document.getElementById('input-class').value} / ${document.getElementById('input-no').value}`;
-        
-        document.getElementById('final-t').innerText = gStats.t; 
-        document.getElementById('final-c').innerText = gStats.c; 
-        document.getElementById('final-w').innerText = gStats.w;
-        
-        const logBody = document.getElementById('log-body'); 
-        logBody.innerHTML = '';
+        document.getElementById('screen-game').classList.add('hidden'); document.getElementById('screen-result').classList.remove('hidden');
+        document.getElementById('box-report').innerHTML = `<b>ชื่อ:</b> ${document.getElementById('input-name').value}<br><b>ชั้น/เลขที่:</b> ${document.getElementById('input-class').value} / ${document.getElementById('input-no').value}`;
+        document.getElementById('final-t').innerText = gStats.t; document.getElementById('final-c').innerText = gStats.c; document.getElementById('final-w').innerText = gStats.w;
+        const logBody = document.getElementById('log-body'); logBody.innerHTML = '';
         gLogs.forEach((item, idx) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `<td>${idx+1}</td><td>${item.q}</td><td>${item.user}</td><td>${item.res ? '✔️' : '❌'}</td>`;
