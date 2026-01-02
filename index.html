@@ -10,22 +10,11 @@
         body { font-family: 'Kanit', sans-serif; background: #F1F5F9; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
         .container { background: white; width: 100%; max-width: 550px; padding: 25px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; position: relative; }
         
-        /* สไตล์สำหรับลายน้ำกันปลอม */
-        .watermark-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
-            overflow: hidden; pointer-events: none; opacity: 0.08; z-index: 0;
-        }
-        .watermark-text { font-size: 1rem; transform: rotate(-30deg); margin: 25px; white-space: nowrap; color: #000; font-weight: bold; }
-
-        /* Setup Form */
         .form-group { text-align: left; margin-bottom: 12px; }
         .form-row { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
         label { font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 4px; display: block; }
         input { width: 100%; padding: 12px; border: 2px solid #E2E8F0; border-radius: 12px; font-family: 'Kanit'; box-sizing: border-box; font-size: 1rem; outline: none; }
-        input.error { border-color: var(--danger) !important; background: #FFF5F5; animation: shake 0.4s; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+        input.error { border-color: var(--danger) !important; background: #FFF5F5; }
 
         .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 8px 0; }
         .time-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 8px; margin: 8px 0; }
@@ -36,50 +25,34 @@
         .chip-table { padding: 8px 12px; border: 1px solid #CBD5E1; border-radius: 20px; cursor: pointer; font-size: 0.85rem; background: white; }
         .chip-table.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* Game UI */
-        .game-info-panel { background: #1E293B; color: white; padding: 15px; border-radius: 15px; text-align: left; font-size: 0.85rem; line-height: 1.6; margin-bottom: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; position: relative; z-index: 1; }
+        .game-info-panel { background: #1E293B; color: white; padding: 15px; border-radius: 15px; text-align: left; font-size: 0.85rem; line-height: 1.6; margin-bottom: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
         .full-width-stats { grid-column: span 2; border-top: 1px solid #334155; padding-top: 8px; margin-top: 5px; display: flex; justify-content: space-around; font-size: 1rem; }
-        .progress-container { width: 100%; height: 16px; background: #E2E8F0; border-radius: 20px; margin: 15px 0 5px 0; overflow: hidden; position: relative; }
+        .progress-container { width: 100%; height: 16px; background: #E2E8F0; border-radius: 20px; margin: 15px 0 5px 0; overflow: hidden; }
         #progress-bar { width: 100%; height: 100%; background: var(--success); transition: width 1s linear; }
-        .timer-wrapper { text-align: left; margin-bottom: 10px; }
         #text-timer { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
-        .question { font-size: 5rem; font-weight: 800; margin: 5px 0; color: var(--dark); position: relative; z-index: 1; }
-        .options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; position: relative; z-index: 1; }
-        .option-btn { padding: 20px 5px; font-size: 1.6rem; border: none; background: #F1F5F9; border-radius: 16px; cursor: pointer; font-weight: 800; font-family: 'Kanit'; color: var(--dark); transition: 0.2s; }
+        .question { font-size: 5rem; font-weight: 800; margin: 5px 0; color: var(--dark); }
+        .options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .option-btn { padding: 20px 5px; font-size: 1.6rem; border: none; background: #F1F5F9; border-radius: 16px; cursor: pointer; font-weight: 800; font-family: 'Kanit'; color: var(--dark); }
         .btn-correct { background-color: var(--success) !important; color: white !important; }
         .btn-wrong { background-color: var(--danger) !important; color: white !important; }
 
-        /* Result UI */
-        .summary-box { background: #F8FAFC; padding: 20px; border-radius: 20px; border: 2px dashed var(--primary); text-align: left; margin-bottom: 20px; position: relative; z-index: 1; }
+        .summary-box { background: #F8FAFC; padding: 20px; border-radius: 20px; border: 2px dashed var(--primary); text-align: left; margin-bottom: 20px; }
         .summary-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #E2E8F0; }
-        .stat-grid-top { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; position: relative; z-index: 1; }
-        .stat-grid-bottom { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; position: relative; z-index: 1; }
         .stat-card { padding: 12px 5px; border-radius: 15px; text-align: center; border: 2px solid #E2E8F0; background: white; }
-        .stat-label { font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 2px; }
         .stat-value { font-size: 1.4rem; font-weight: 800; }
-        .unit-text { font-size: 0.9rem; font-weight: 400; margin-left: 3px; }
 
-        .filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; position: relative; z-index: 1; }
-        .filter-btns { display: flex; gap: 5px; }
-        .f-btn { padding: 5px 12px; border-radius: 8px; border: 1px solid #CBD5E1; background: #fff; cursor: pointer; font-family: 'Kanit'; font-size: 0.8rem; }
-        .f-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-
-        .log-container { max-height: 400px; overflow-y: auto; border: 1px solid #E2E8F0; border-radius: 12px; margin-bottom: 20px; background: white; position: relative; z-index: 1; }
+        .log-container { max-height: 400px; overflow-y: auto; border: 1px solid #E2E8F0; border-radius: 12px; margin-bottom: 20px; }
         .log-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        .log-table th { background: #F1F5F9; position: sticky; top: 0; padding: 12px; border-bottom: 2px solid #E2E8F0; }
+        .log-table th { background: #F1F5F9; padding: 12px; border-bottom: 2px solid #E2E8F0; }
         .log-table td { padding: 12px; border-bottom: 1px solid #F1F5F9; text-align: center; }
-        .row-correct { color: var(--success); font-weight: bold; }
-        .row-wrong { color: var(--danger); font-weight: bold; background: #FFF5F5; }
 
-        .btn-main { width: 100%; padding: 16px; border-radius: 14px; border: none; font-size: 1.2rem; font-weight: bold; cursor: pointer; font-family: 'Kanit'; margin-top: 10px; position: relative; z-index: 1; }
+        .btn-main { width: 100%; padding: 16px; border-radius: 14px; border: none; font-size: 1.2rem; font-weight: bold; cursor: pointer; font-family: 'Kanit'; margin-top: 10px; }
         .btn-start { background: var(--success); color: white; }
-        .btn-home { background: #64748B; color: white; font-size: 1.1rem; }
+        .btn-home { background: #64748B; color: white; }
         
-        .footer-credits { margin-top: 25px; font-size: 0.8rem; color: #64748B; border-top: 1px solid #F1F5F9; padding-top: 15px; line-height: 1.5; position: relative; z-index: 1; }
+        .footer-credits { margin-top: 25px; font-size: 0.8rem; color: #64748B; border-top: 1px solid #F1F5F9; padding-top: 15px; line-height: 1.5; }
         .footer-credits b { color: var(--primary); }
-
         .hidden { display: none !important; }
-        .sound-toggle { margin-top: 10px; font-size: 0.8rem; color: #64748B; cursor: pointer; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -87,14 +60,13 @@
 <div class="container" id="screen-setup">
     <h1 style="color: var(--primary); margin: 0 0 20px 0;">🎮 พร้อมตะลุยเกมสูตรคูณ</h1>
     <div class="form-group">
-        <label>ชื่อ-นามสกุล <span style="color:red">*</span></label>
-        <input type="text" id="input-name" placeholder="ด.ช. ซูลกิฟลี  ดอเลาะ">
+        <label>ชื่อ-นามสกุล</label>
+        <input type="text" id="input-name" placeholder="ระบุชื่อของคุณ...">
     </div>
     <div class="form-row">
-        <div class="form-group"><label>ชั้น <span style="color:red">*</span></label><input type="text" id="input-class" placeholder="ป.6/1"></div>
-        <div class="form-group"><label>เลขที่ <span style="color:red">*</span></label><input type="number" id="input-no" placeholder="1"></div>
+        <div class="form-group"><label>ชั้น</label><input type="text" id="input-class" placeholder="ป.6/1"></div>
+        <div class="form-group"><label>เลขที่</label><input type="number" id="input-no" placeholder="1"></div>
     </div>
-    
     <div class="form-group">
         <label>เลือกระดับความยาก</label>
         <div class="btn-grid">
@@ -105,19 +77,16 @@
         </div>
         <div id="box-custom" class="hidden"><div class="multi-select-tables" id="list-tables"></div></div>
     </div>
-
     <div class="form-group">
-        <label>เลือกเวลาเล่น (วินาที)</label>
+        <label>เวลาเล่น (วินาที)</label>
         <div class="time-grid">
             <button class="btn-option t-btn" onclick="changeTime(60)">60</button>
             <button class="btn-option t-btn" onclick="changeTime(90)">90</button>
             <button class="btn-option t-btn active" onclick="changeTime(120)">120</button>
-            <button class="btn-option t-btn" onclick="changeTime(150)">150</button>
             <button class="btn-option t-btn" onclick="changeTime(180)">180</button>
         </div>
     </div>
     <button class="btn-main btn-start" onclick="beginGame()">เริ่มเล่น</button>
-    <div class="sound-toggle" onclick="toggleSound()" id="sound-status">🔊 เปิดเสียงอยู่</div>
 
     <div class="footer-credits">
         ออกแบบและพัฒนาโดย...<br>
@@ -130,124 +99,72 @@
 <div class="container hidden" id="screen-game">
     <div class="game-info-panel" id="panel-header"></div>
     <div class="progress-container"><div id="progress-bar"></div></div>
-    <div class="timer-wrapper"><span id="text-timer">0</span> <span style="font-size: 0.9rem; color: #64748B;">วินาที</span></div>
+    <div style="text-align:left; margin-bottom:10px;"><span id="text-timer">0</span> วินาที</div>
     <div class="question" id="text-quest">? × ?</div>
     <div id="grid-options" class="options-grid"></div>
-    <button class="btn-main btn-home" style="margin-top:20px;" onclick="goHome()">🏠 กลับหน้าหลัก</button>
 </div>
 
-<div class="container hidden" id="screen-result" style="overflow: hidden;">
-    <div id="watermark-bg" class="watermark-overlay"></div>
-    <h2 style="color: var(--primary); margin: 0 0 15px 0; position: relative; z-index: 1;">🏆 สรุปคะแนน</h2>
+<div class="container hidden" id="screen-result">
+    <h2 style="color: var(--primary);">🏆 สรุปคะแนน</h2>
     <div class="summary-box" id="box-report"></div>
-    
-    <div class="stat-grid-top">
-        <div class="stat-card" style="background: #FFFBEB; border-color: #FDE68A;">
-            <span class="stat-label" style="color: #B45309;">⏱️ เวลาที่เล่น</span>
-            <div class="stat-value" style="color: #D97706;" id="final-time-label">0</div>
-        </div>
-        <div class="stat-card" style="background: #F0F9FF; border-color: #BAE6FD;">
-            <span class="stat-label" style="color: #0369A1;">🎯 ความแม่นยำ</span>
-            <div class="stat-value" style="color: #0284C7;" id="final-acc">0%</div>
-        </div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:15px;">
+        <div class="stat-card"><span style="font-size:0.8rem;">ทั้งหมด</span><div class="stat-value" id="final-t">0</div></div>
+        <div class="stat-card" style="color:var(--success);"><span style="font-size:0.8rem;">ถูก</span><div class="stat-value" id="final-c">0</div></div>
+        <div class="stat-card" style="color:var(--danger);"><span style="font-size:0.8rem;">ผิด</span><div class="stat-value" id="final-w">0</div></div>
     </div>
-
-    <div class="stat-grid-bottom">
-        <div class="stat-card" style="background: #EEF2FF; border-color: #C7D2FE;"><span class="stat-label" style="color: #4338CA;">ทั้งหมด</span><div class="stat-value" style="color: var(--primary);"><span id="final-t">0</span><span class="unit-text">ข้อ</span></div></div>
-        <div class="stat-card" style="background: #ECFDF5; border-color: #A7F3D0;"><span class="stat-label" style="color: #047857;">ตอบถูก</span><div class="stat-value" style="color: var(--success);"><span id="final-c">0</span><span class="unit-text">ข้อ</span></div></div>
-        <div class="stat-card" style="background: #FEF2F2; border-color: #FECACA;"><span class="stat-label" style="color: #B91C1C;">ตอบผิด</span><div class="stat-value" style="color: var(--danger);"><span id="final-w">0</span><span class="unit-text">ข้อ</span></div></div>
-    </div>
-
-    <div class="filter-header">
-        <div style="font-size: 0.9rem; font-weight: bold; color: var(--dark);">ประวัติการตอบ:</div>
-        <div class="filter-btns">
-            <button class="f-btn active" id="btn-f-all" onclick="updateLogTable('all')">ทั้งหมด</button>
-            <button class="f-btn" id="btn-f-correct" onclick="updateLogTable('correct')">ถูก</button>
-            <button class="f-btn" id="btn-f-wrong" onclick="updateLogTable('wrong')">ผิด</button>
-        </div>
-    </div>
-
     <div class="log-container"><table class="log-table"><thead><tr><th>ข้อ</th><th>โจทย์</th><th>ตอบ</th><th>ผล</th></tr></thead><tbody id="log-body"></tbody></table></div>
-    
     <button class="btn-main btn-home" onclick="goHome()">🏠 กลับหน้าหลัก</button>
-
-    <div class="footer-credits">
-        ออกแบบและพัฒนาโดย...<br>
-        <b>นายซูลกิฟลี ดอเลาะ</b><br>
-        ครู โรงเรียนไทยรัฐวิทยา 52 (ชุมชนบ้านต้นไพ)<br>
-        สพป.ปัตตานี เขต 2
-    </div>
 </div>
 
 <script>
-    let gMode = 'all'; let gTables = []; let gSec = 120; let gTimer; let gStats = { t:0, c:0, w:0 }; let gAns = 0; let gLogs = []; let soundEnabled = true; let isProcessing = false;
-
-    const sndCorrect = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
-    const sndWrong = new Audio('https://assets.mixkit.co/active_storage/sfx/255/255-preview.mp3'); 
-    const sndEnd = new Audio('https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3');
-    const sndTick = new Audio('https://assets.mixkit.co/active_storage/sfx/2190/2190-preview.mp3');
-
-    function toggleSound() { soundEnabled = !soundEnabled; document.getElementById('sound-status').innerText = soundEnabled ? "🔊 เปิดเสียงอยู่" : "🔇 ปิดเสียงแล้ว"; }
-    function playSound(type) { if(!soundEnabled) return; if(type === 'correct') { sndCorrect.currentTime = 0; sndCorrect.play(); } if(type === 'wrong') { sndWrong.currentTime = 0; sndWrong.play(); } if(type === 'end') { sndEnd.currentTime = 0; sndEnd.play(); } if(type === 'tick') { sndTick.currentTime = 0; sndTick.play(); } }
+    let gMode = 'all'; let gTables = []; let gSec = 120; let gTimer; let gStats = { t:0, c:0, w:0 }; let gAns = 0; let gLogs = []; let isProcessing = false;
 
     const tableBox = document.getElementById('list-tables');
     for(let i=2; i<=12; i++) {
         const s = document.createElement('span'); s.className = 'chip-table'; s.innerText = `แม่ ${i}`;
-        s.onclick = () => { if(gTables.includes(i)) { gTables = gTables.filter(x => x!==i); s.classList.remove('active'); } else { gTables.push(i); s.classList.add('active'); } gTables.sort((a,b) => a - b); };
+        s.onclick = () => { if(gTables.includes(i)) { gTables = gTables.filter(x => x!==i); s.classList.remove('active'); } else { gTables.push(i); s.classList.add('active'); } };
         tableBox.appendChild(s);
     }
 
     function changeMode(m) { gMode = m; document.querySelectorAll('.btn-grid .btn-option').forEach(b => b.classList.remove('active')); document.getElementById('m-'+m).classList.add('active'); document.getElementById('box-custom').classList.toggle('hidden', m !== 'custom'); }
     function changeTime(t) { gSec = t; document.querySelectorAll('.t-btn').forEach(c => c.classList.toggle('active', parseInt(c.innerText) === t)); }
-    function getLevelText() { return gMode === 'custom' ? `เจาะจงแม่ (${gTables.length > 0 ? gTables.join(', ') : '?'})` : document.getElementById('m-'+gMode).innerText; }
-    function goHome() { clearInterval(gTimer); document.getElementById('screen-game').classList.add('hidden'); document.getElementById('screen-result').classList.add('hidden'); document.getElementById('screen-setup').classList.remove('hidden'); isProcessing = false; }
+    function goHome() { clearInterval(gTimer); document.getElementById('screen-game').classList.add('hidden'); document.getElementById('screen-result').classList.add('hidden'); document.getElementById('screen-setup').classList.remove('hidden'); }
 
     function beginGame() {
-        const nInput = document.getElementById('input-name'); const cInput = document.getElementById('input-class'); const noInput = document.getElementById('input-no');
-        let isValid = true; [nInput, cInput, noInput].forEach(el => { if(!el.value.trim()) { el.classList.add('error'); isValid = false; } else { el.classList.remove('error'); } });
-        if(!isValid) { alert('❌ กรุณากรอกข้อมูลให้ครบครับ'); return; }
-        if (gMode === 'custom' && gTables.length === 0) { alert('❌ กรุณาเลือกแม่สูตรคูณก่อนครับ'); return; }
-        gStats = { t:0, c:0, w:0 }; gLogs = []; isProcessing = false;
+        const nInput = document.getElementById('input-name');
+        if(!nInput.value.trim()) { nInput.classList.add('error'); return; }
+        gStats = { t:0, c:0, w:0 }; gLogs = [];
         let pool = (gMode === 'easy' ? [2,3,4,5,10] : (gMode === 'hard' ? [6,7,8,9,11,12] : (gMode === 'all' ? [2,3,4,5,6,7,8,9,10,11,12] : gTables)));
         document.getElementById('screen-setup').classList.add('hidden'); document.getElementById('screen-game').classList.remove('hidden');
-        renderHeader(nInput.value); startTimer(pool); nextQuestion(pool);
+        renderHeader(); startTimer(pool); nextQuestion(pool);
     }
 
-    function renderHeader(name) {
-        const cls = document.getElementById('input-class').value; const no = document.getElementById('input-no').value;
-        document.getElementById('panel-header').innerHTML = `
-            <div>ชื่อ: <b>${name}</b></div><div>เวลาเล่น: <b>${gSec} วินาที</b></div>
-            <div>ชั้น/เลขที่: <b>${cls} / ${no}</b></div><div>ระดับ: <b>${getLevelText()}</b></div>
-            <div class="full-width-stats"><span>ทั้งหมด: <b id="live-t">0</b></span><span>ถูก: <b style="color:#4ADE80" id="live-c">0</b></span><span>ผิด: <b style="color:#F87171" id="live-w">0</b></span></div>`;
+    function renderHeader() {
+        document.getElementById('panel-header').innerHTML = `<div>ชื่อ: <b>${document.getElementById('input-name').value}</b></div><div>เวลา: <b>${gSec} วินาที</b></div><div class="full-width-stats"><span>ข้อที่: <b id="live-t">0</b></span><span>ถูก: <b style="color:#4ADE80" id="live-c">0</b></span><span>ผิด: <b style="color:#F87171" id="live-w">0</b></span></div>`;
     }
 
     function startTimer(pool) {
         let remain = gSec; const bar = document.getElementById('progress-bar');
-        clearInterval(gTimer);
         gTimer = setInterval(() => {
             remain--; bar.style.width = (remain/gSec)*100 + "%"; document.getElementById('text-timer').innerText = remain;
-            if(remain <= 10 && remain > 0) playSound('tick');
-            if(remain <= 0) { clearInterval(gTimer); playSound('end'); endBattle(); }
+            if(remain <= 0) { clearInterval(gTimer); endBattle(); }
         }, 1000);
     }
 
     function nextQuestion(pool) {
-        if(document.getElementById('screen-game').classList.contains('hidden')) return;
         isProcessing = false;
         const n1 = pool[Math.floor(Math.random() * pool.length)]; const n2 = Math.floor(Math.random() * 12) + 1;
         gAns = n1 * n2; document.getElementById('text-quest').innerText = `${n1} × ${n2}`;
         let opts = new Set([gAns]); while(opts.size < 6) { let fake = gAns + (Math.floor(Math.random() * 20) - 10); if(fake > 0 && fake !== gAns) opts.add(fake); }
         const box = document.getElementById('grid-options'); box.innerHTML = '';
-        let correctBtn;
         Array.from(opts).sort(() => Math.random()-0.5).forEach(o => {
             const btn = document.createElement('button'); btn.className = 'option-btn'; btn.innerText = o;
-            if(o === gAns) correctBtn = btn;
             btn.onclick = () => {
                 if(isProcessing) return; isProcessing = true;
                 const isCorrect = (o === gAns); gStats.t++;
-                gLogs.push({ num: gStats.t, q: `${n1} × ${n2} = ${gAns}`, user: o, res: isCorrect });
-                if(isCorrect) { gStats.c++; btn.classList.add('btn-correct'); playSound('correct'); setTimeout(() => nextQuestion(pool), 100); } 
-                else { gStats.w++; btn.classList.add('btn-wrong'); correctBtn.classList.add('btn-correct'); playSound('wrong'); setTimeout(() => nextQuestion(pool), 600); }
+                gLogs.push({ q: `${n1} × ${n2}`, user: o, res: isCorrect });
+                if(isCorrect) { gStats.c++; btn.classList.add('btn-correct'); setTimeout(() => nextQuestion(pool), 200); } 
+                else { gStats.w++; btn.classList.add('btn-wrong'); setTimeout(() => nextQuestion(pool), 400); }
                 document.getElementById('live-t').innerText = gStats.t; document.getElementById('live-c').innerText = gStats.c; document.getElementById('live-w').innerText = gStats.w;
             };
             box.appendChild(btn);
@@ -255,44 +172,13 @@
     }
 
     function endBattle() {
-        document.getElementById('screen-game').classList.add('hidden'); 
-        document.getElementById('screen-result').classList.remove('hidden');
-        const now = new Date(); const dateStr = now.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
-        const timeStr = now.toLocaleTimeString('th-TH');
-        
-        document.getElementById('box-report').innerHTML = `
-            <div class="summary-row"><span>ชื่อ-นามสกุล:</span><b>${document.getElementById('input-name').value}</b></div>
-            <div class="summary-row"><span>ชั้น/เลขที่:</span><b>${document.getElementById('input-class').value} / เลขที่ ${document.getElementById('input-no').value}</b></div>
-            <div class="summary-row"><span>วันที่เล่น:</span><b>${dateStr}</b></div>
-            <div class="summary-row"><span>ระดับความยาก:</span><b>${getLevelText()}</b></div>`;
-            
-        document.getElementById('final-time-label').innerText = gSec + " วินาที";
-        document.getElementById('final-acc').innerText = (gStats.t > 0 ? Math.round((gStats.c/gStats.t)*100) : 0) + "%";
+        document.getElementById('screen-game').classList.add('hidden'); document.getElementById('screen-result').classList.remove('hidden');
+        document.getElementById('box-report').innerHTML = `<b>ชื่อ:</b> ${document.getElementById('input-name').value}<br><b>ชั้น/เลขที่:</b> ${document.getElementById('input-class').value} / ${document.getElementById('input-no').value}`;
         document.getElementById('final-t').innerText = gStats.t; document.getElementById('final-c').innerText = gStats.c; document.getElementById('final-w').innerText = gStats.w;
-        
-        // สร้างลายน้ำกันปลอม
-        const watermarkBg = document.getElementById('watermark-bg');
-        watermarkBg.innerHTML = '';
-        const markText = `${document.getElementById('input-name').value} | ${dateStr} ${timeStr}`;
-        for(let i=0; i<12; i++) {
-            const span = document.createElement('div');
-            span.className = 'watermark-text';
-            span.innerText = markText;
-            watermarkBg.appendChild(span);
-        }
-        
-        updateLogTable('all');
-    }
-
-    function updateLogTable(filter) {
-        document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('btn-f-' + filter).classList.add('active');
         const logBody = document.getElementById('log-body'); logBody.innerHTML = '';
-        const filteredLogs = gLogs.filter(item => filter === 'all' ? true : (filter === 'correct' ? item.res : !item.res));
-        if(filteredLogs.length === 0) { logBody.innerHTML = '<tr><td colspan="4" style="padding:20px;">ไม่มีข้อมูล</td></tr>'; return; }
-        filteredLogs.forEach(item => {
-            const tr = document.createElement('tr'); tr.className = item.res ? 'row-correct' : 'row-wrong';
-            tr.innerHTML = `<td>${item.num}</td><td>${item.q}</td><td>${item.user}</td><td>${item.res ? 'ถูก' : 'ผิด'}</td>`;
+        gLogs.forEach((item, idx) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${idx+1}</td><td>${item.q}</td><td>${item.user}</td><td>${item.res ? '✔️' : '❌'}</td>`;
             logBody.appendChild(tr);
         });
     }
