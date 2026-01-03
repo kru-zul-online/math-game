@@ -15,8 +15,11 @@
             --header-border: #90caf9;
         }
         body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px 0; }
-        .container { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); width: 95%; max-width: 850px; border: 5px solid var(--primary); }
+        .container { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); width: 95%; max-width: 850px; border: 5px solid var(--primary); position: relative; }
         
+        .sound-toggle { position: absolute; top: 20px; right: 20px; background: #eee; border: none; padding: 10px; border-radius: 50%; cursor: pointer; font-size: 24px; line-height: 1; transition: 0.3s; z-index: 100; }
+        .sound-toggle.muted { opacity: 0.5; background: #ddd; }
+
         h1 { text-align: center; color: var(--primary); margin-bottom: 30px; font-size: 32px; border-bottom: 3px solid var(--warning); display: inline-block; width: 100%; padding-bottom: 10px; }
         .form-group { margin-bottom: 25px; }
         label { display: block; margin-bottom: 10px; font-weight: bold; color: #444; font-size: 20px; }
@@ -87,7 +90,9 @@
             margin: 5px 0; 
             display: block;
         }
-        .teacher-info { color: #444; font-size: 18px; margin: 3px 0; }
+        
+        .school-info { color: #1e90ff; font-size: 18px; margin: 3px 0; font-weight: bold; }
+        .area-info { color: #444; font-size: 20px; margin: 3px 0; font-weight: normal; }
 
         .button-grid { display: grid; gap: 10px; margin-top: 10px; margin-bottom: 25px; }
         .grid-4 { grid-template-columns: repeat(4, 1fr); }
@@ -98,6 +103,8 @@
 <body>
 
 <div class="container">
+    <button id="sound-toggle" class="sound-toggle" onclick="toggleSound()">🔊</button>
+
     <div id="setup-screen">
         <h1>เกมบวกลบคูณหารระคน (ไม่มีวงเล็บ)</h1>
         <div class="form-group">
@@ -130,8 +137,8 @@
         <div class="footer-card">
             <div class="footer-title">ออกแบบและพัฒนาโดย...</div>
             <span class="teacher-name">นายซูลกิฟลี ดอเลาะ</span>
-            <div class="teacher-info">ครู โรงเรียนไทยรัฐวิทยา 52 (ชุมชนบ้านต้นไพ)</div>
-            <div class="teacher-info" style="font-weight: bold; color: #1e90ff;">สพป.ปัตตานี เขต 2</div>
+            <div class="school-info">ครู โรงเรียนไทยรัฐวิทยา 52 (ชุมชนบ้านต้นพไ)</div>
+            <div class="area-info">สพป.ปัตตานี เขต 2</div>
         </div>
     </div>
 
@@ -191,32 +198,37 @@
         <div class="footer-card">
             <div class="footer-title">ออกแบบและพัฒนาโดย...</div>
             <span class="teacher-name">นายซูลกิฟลี ดอเลาะ</span>
-            <div class="teacher-info">ครู โรงเรียนไทยรัฐวิทยา 52 (ชุมชนบ้านต้นไพ)</div>
-            <div class="teacher-info" style="font-weight: bold; color: #1e90ff;">สพป.ปัตตานี เขต 2</div>
+            <div class="school-info">ครู โรงเรียนไทยรัฐวิทยา 52 (ชุมชนบ้านต้นไพ)</div>
+            <div class="area-info">สพป.ปัตตานี เขต 2</div>
         </div>
     </div>
 </div>
 
 <script>
     let config = { fullname: "", grade: "", no: "", terms: [], total: 0 };
-    let state = { current: 0, score: 0, answer: 0, history: [], startTime: 0, timerInterval: null };
+    let state = { current: 0, score: 0, answer: 0, history: [], startTime: 0, timerInterval: null, soundEnabled: true };
     const ops = ['+', '-', '*', '/'];
     const opDisplay = { '+': '+', '-': '-', '*': '×', '/': '÷' };
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // ตั้งค่าไฟล์เสียงตามที่ครูต้องการ
+    const sndCorrect = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+    const sndWrong = new Audio('https://assets.mixkit.co/active_storage/sfx/255/255-preview.mp3');
+
+    function toggleSound() {
+        state.soundEnabled = !state.soundEnabled;
+        const btn = document.getElementById('sound-toggle');
+        btn.innerText = state.soundEnabled ? '🔊' : '🔇';
+        btn.classList.toggle('muted', !state.soundEnabled);
+    }
 
     function playSound(type) {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const now = audioCtx.currentTime;
-        const gain = audioCtx.createGain(); gain.connect(audioCtx.destination);
-        const osc = audioCtx.createOscillator(); osc.connect(gain);
+        if (!state.soundEnabled) return;
         if (type === 'correct') {
-            osc.type = 'sine'; osc.frequency.setValueAtTime(523, now); osc.frequency.exponentialRampToValueAtTime(1046, now + 0.1);
-            gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-            osc.start(now); osc.stop(now + 0.4);
+            sndCorrect.currentTime = 0; // เล่นซ้ำได้ทันทีแม้เสียงเก่ายังไม่จบ
+            sndCorrect.play();
         } else if (type === 'wrong') {
-            osc.type = 'square'; osc.frequency.setValueAtTime(110, now);
-            gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
-            osc.start(now); osc.stop(now + 0.2);
+            sndWrong.currentTime = 0;
+            sndWrong.play();
         }
     }
 
@@ -239,13 +251,10 @@
         if (!hasError && config.terms.length > 0 && config.total > 0) {
             config.fullname = f.value.trim(); config.grade = g.value.trim(); config.no = n.value;
             startExam();
-        } else if (config.terms.length === 0 || config.total === 0 || hasError) {
-            alert('กรุณากรอกข้อมูลให้ครบครับ');
-        }
+        } else { alert('กรุณากรอกข้อมูลให้ครบครับ'); }
     }
 
     function startExam() {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
         document.getElementById('setup-screen').style.display = 'none';
         document.getElementById('quiz-screen').style.display = 'block';
         document.getElementById('total-q-label').innerText = config.total;
@@ -292,7 +301,7 @@
         }
         state.history.push({ qNum: state.current, question: `${state.currentProblemText} = ${state.answer}`, userAns: val, res: isCorrect });
         document.getElementById('score-live').innerText = `คะแนน: ${state.score}`;
-        setTimeout(nextQ, 700);
+        setTimeout(nextQ, 400);
     }
 
     function getThaiDate() {
@@ -305,14 +314,11 @@
         clearInterval(state.timerInterval);
         document.getElementById('quiz-screen').style.display = 'none';
         document.getElementById('result-screen').style.display = 'block';
-        
-        // เพิ่มบรรทัดวันที่ต่อจากชั้นเลขที่
         document.getElementById('final-header-info').innerHTML = `
             <b>${config.fullname}</b><br>
             ชั้น: <b>${config.grade}</b> | เลขที่: <b>${config.no}</b><br>
             วันที่ทำ: <b>${getThaiDate()}</b>
         `;
-        
         document.getElementById('res-terms-box').innerText = config.terms.join(',') + " พจน์";
         document.getElementById('res-time').innerText = document.getElementById('timer').innerText;
         document.getElementById('res-score-box').innerText = state.score + " / " + config.total;
