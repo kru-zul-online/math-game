@@ -240,7 +240,6 @@
             config.fullname = f.value.trim(); config.grade = g.value.trim(); config.no = n.value;
             startExam();
         } else if (config.terms.length === 0 || config.total === 0 || hasError) {
-            // แก้ไขข้อความ Alert ตามสั่งครับ
             alert('กรุณากรอกข้อมูลให้ครบครับ');
         }
     }
@@ -268,7 +267,10 @@
         state.current++;
         if (state.current > config.total) return showResult();
         document.getElementById('current-q-num').innerText = state.current;
-        for(let i=0; i < state.current-1; i++) document.getElementById(`step-${i}`).style.background = 'var(--success)';
+        for(let i=0; i < state.current-1; i++) {
+            let step = document.getElementById(`step-${i}`);
+            if(step) step.style.background = 'var(--success)';
+        }
         const problem = genLogic(config.terms[Math.floor(Math.random() * config.terms.length)]);
         document.getElementById('q-text').innerText = problem.display + " = ?";
         state.answer = problem.answer; state.currentProblemText = problem.display;
@@ -293,14 +295,24 @@
         setTimeout(nextQ, 700);
     }
 
+    function getThaiDate() {
+        const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+        const d = new Date();
+        return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear() + 543}`;
+    }
+
     function showResult() {
         clearInterval(state.timerInterval);
         document.getElementById('quiz-screen').style.display = 'none';
         document.getElementById('result-screen').style.display = 'block';
+        
+        // เพิ่มบรรทัดวันที่ต่อจากชั้นเลขที่
         document.getElementById('final-header-info').innerHTML = `
             <b>${config.fullname}</b><br>
-            ชั้น: <b>${config.grade}</b> | เลขที่: <b>${config.no}</b>
+            ชั้น: <b>${config.grade}</b> | เลขที่: <b>${config.no}</b><br>
+            วันที่ทำ: <b>${getThaiDate()}</b>
         `;
+        
         document.getElementById('res-terms-box').innerText = config.terms.join(',') + " พจน์";
         document.getElementById('res-time').innerText = document.getElementById('timer').innerText;
         document.getElementById('res-score-box').innerText = state.score + " / " + config.total;
