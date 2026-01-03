@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>เกมบวกลบคูณหารระคน (ไม่มีวงเล็บ)</title>
+    <style>
+        :root { 
+            --primary: #1e90ff;    
+            --success: #2ed573;    
+            --warning: #ffa502;    
+            --danger: #ff4757;     
+            --bg: #f1f2f6; 
+            --header-bg: #e3f2fd; 
+            --header-text: #1565c0;
+            --header-border: #90caf9;
+        }
+        body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px 0; }
+        .container { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); width: 95%; max-width: 850px; border: 5px solid var(--primary); }
+        
+        h1 { text-align: center; color: var(--primary); margin-bottom: 30px; font-size: 32px; border-bottom: 3px solid var(--warning); display: inline-block; width: 100%; padding-bottom: 10px; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; margin-bottom: 10px; font-weight: bold; color: #444; font-size: 20px; }
+        
+        input[type="text"], input[type="number"] { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 18px; font-family: 'Chakra Petch'; transition: all 0.3s; }
+        input.error { border-color: var(--danger) !important; background-color: #fff5f5; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .shake { animation: shake 0.3s ease-in-out; }
+
+        .chip { padding: 15px 0; border: 2px solid #ddd; border-radius: 12px; cursor: pointer; background: white; font-size: 18px; font-weight: bold; text-align: center; }
+        .chip.active { background: var(--warning); color: white; border-color: var(--warning); }
+        
+        .btn-start { background: var(--success); color: white; width: 100%; padding: 22px; border: none; border-radius: 15px; font-size: 28px; font-weight: bold; cursor: pointer; margin-top: 10px; font-family: 'Chakra Petch'; box-shadow: 0 5px 0 #26af5a; }
+        .btn-start:active { transform: translateY(3px); box-shadow: none; }
+
+        .exam-info-bar { background: var(--header-bg); padding: 20px; border-radius: 16px; margin-bottom: 25px; display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; border: 2px solid var(--header-border); color: var(--header-text); }
+        #quiz-user-display { font-size: 22px; line-height: 1.4; font-weight: bold; } 
+        #quiz-mode-display { text-align: right; font-size: 22px; line-height: 1.4; font-weight: bold; } 
+        .timer-center-section { text-align: center; font-size: 52px; font-weight: bold; color: var(--danger); }
+        
+        .question { 
+            font-size: 65px; 
+            font-weight: 700; 
+            text-align: center; 
+            margin: 30px 0; 
+            color: #202124; 
+            background: #f9f9f9; 
+            padding: 20px; 
+            border-radius: 15px;
+            white-space: nowrap; 
+            overflow: hidden;
+        }
+        @media (max-width: 600px) {
+            .question { font-size: 10vw; padding: 15px 10px; }
+        }
+
+        .choice-btn { background: #fff; border: 2px solid #ddd; font-size: 32px; padding: 25px 10px; border-radius: 18px; cursor: pointer; font-family: 'Chakra Petch'; box-shadow: 0 4px 0 #ddd; }
+        .choice-btn.correct { background: var(--success) !important; color: white; border-color: var(--success); box-shadow: 0 4px 0 #26af5a; }
+        .choice-btn.wrong { background: var(--danger) !important; color: white; border-color: var(--danger); box-shadow: 0 4px 0 #d63031; }
+
+        .res-info { grid-column: span 3; background: var(--header-bg); padding: 25px; border-radius: 12px; font-size: 26px; color: var(--header-text); text-align: center; border: 2px solid var(--header-border); margin-bottom: 15px; line-height: 1.5; }
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .summary-box { border-radius: 15px; padding: 15px; text-align: center; border: 2px solid; }
+        .summary-label { font-weight: bold; font-size: 18px; margin-bottom: 5px; }
+        .summary-value { font-size: 32px; font-weight: bold; }
+
+        .filter-btn { padding: 8px 15px; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; font-family: 'Chakra Petch'; background: white; font-size: 18px; }
+        .filter-btn.active { background: var(--primary); color: white; }
+
+        .footer-card { 
+            margin-top: 40px; 
+            padding: 25px; 
+            border-radius: 16px; 
+            background: #fff; 
+            border: 2px solid #e3f2fd; 
+            text-align: center; 
+        }
+        .footer-title { color: #777; font-size: 15px; margin-bottom: 10px; }
+        .teacher-name { 
+            font-size: 28px; 
+            font-weight: bold; 
+            color: #1565c0; 
+            margin: 5px 0; 
+            display: block;
+        }
+        .teacher-info { color: #444; font-size: 18px; margin: 3px 0; }
+
+        .button-grid { display: grid; gap: 10px; margin-top: 10px; margin-bottom: 25px; }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        .grid-5 { grid-template-columns: repeat(5, 1fr); }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div id="setup-screen">
+        <h1>เกมบวกลบคูณหารระคน (ไม่มีวงเล็บ)</h1>
+        <div class="form-group">
+            <label>ชื่อ-นามสกุล</label>
+            <input type="text" id="fullname" placeholder="ด.ช. ซูลกิฟลี ดอเลาะ" onfocus="this.classList.remove('error')">
+        </div>
+        <div style="display: flex; gap: 20px;" class="form-group">
+            <div style="flex:2"><label>ชั้น</label><input type="text" id="grade" placeholder="ป.6/1" onfocus="this.classList.remove('error')"></div>
+            <div style="flex:1"><label>เลขที่</label><input type="number" id="no" placeholder="1" onfocus="this.classList.remove('error')"></div>
+        </div>
+        <div style="margin-top: 30px; border-top: 2px solid #eee; padding-top: 25px;">
+            <label>เลือกจำนวนพจน์ (เลือกผสมได้)</label>
+            <div class="button-grid grid-4">
+                <div class="chip term-chip" data-term="2" onclick="toggleTerm(this)">2 พจน์</div>
+                <div class="chip term-chip" data-term="3" onclick="toggleTerm(this)">3 พจน์</div>
+                <div class="chip term-chip" data-term="4" onclick="toggleTerm(this)">4 พจน์</div>
+                <div class="chip term-chip" data-term="5" onclick="toggleTerm(this)">5 พจน์</div>
+            </div>
+            <label>เลือกจำนวนข้อ</label>
+            <div class="button-grid grid-5">
+                <div class="chip count-chip" data-count="10" onclick="selectCount(this)">10 ข้อ</div>
+                <div class="chip count-chip" data-count="20" onclick="selectCount(this)">20 ข้อ</div>
+                <div class="chip count-chip" data-count="30" onclick="selectCount(this)">30 ข้อ</div>
+                <div class="chip count-chip" data-count="40" onclick="selectCount(this)">40 ข้อ</div>
+                <div class="chip count-chip" data-count="50" onclick="selectCount(this)">50 ข้อ</div>
+            </div>
+        </div>
+        <button class="btn-start" onclick="checkBeforeStart()">เริ่มเกม</button>
+        
+        <div class="footer-card">
+            <div class="footer-title">ออกแบบและพัฒนาโดย...</div>
+            <span class="teacher-name">นายซูลกิฟลี ดอเลาะ</span>
+            <div class="teacher-info">ครู โรงเรียนไทยรัฐวิทยา 52 (ชุมชนบ้านต้นไพ)</div>
+            <div class="teacher-info" style="font-weight: bold; color: #1e90ff;">สพป.ปัตตานี เขต 2</div>
+        </div>
+    </div>
+
+    <div id="quiz-screen" style="display: none;">
+        <div id="stepped-progress" style="display: flex; gap: 4px; margin-bottom: 20px; height: 12px;"></div>
+        <div class="exam-info-bar">
+            <div id="quiz-user-display"></div>
+            <div class="timer-center-section" id="timer">00:00</div>
+            <div id="quiz-mode-display"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 26px; font-weight: bold; margin-bottom: 10px;">
+            <span style="color: var(--primary);">ข้อที่ <span id="current-q-num">1</span> / <span id="total-q-label">10</span></span>
+            <span id="score-live" style="color: var(--success);">คะแนน: 0</span>
+        </div>
+        <div class="question" id="q-text"></div>
+        <div id="choices-box" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;"></div>
+        <button style="margin-top: 40px; width: 100%; padding: 20px; border-radius: 12px; border: none; background: #95a5a6; color: white; font-size: 22px; font-family: 'Chakra Petch'; cursor: pointer;" onclick="if(confirm('ยกเลิกเกม?')){location.reload()}">ยกเลิก/กลับหน้าแรก</button>
+    </div>
+
+    <div id="result-screen" style="display: none;">
+        <h1>สรุปผลการเล่น</h1>
+        <div class="res-info" id="final-header-info"></div>
+        
+        <div class="summary-grid">
+            <div class="summary-box" style="background: #fff9e6; border-color: var(--warning);">
+                <div class="summary-label" style="color: #b8860b;">จำนวนพจน์</div>
+                <div id="res-terms-box" class="summary-value" style="color: #b8860b;">-</div>
+            </div>
+            <div class="summary-box" style="background: #fff5f5; border-color: var(--danger);">
+                <div class="summary-label" style="color: var(--danger);">เวลาที่ใช้</div>
+                <div id="res-time" class="summary-value" style="color: var(--danger);">00:00</div>
+            </div>
+            <div class="summary-box" style="background: #f0fff4; border-color: var(--success);">
+                <div class="summary-label" style="color: var(--success);">คะแนนที่ได้</div>
+                <div id="res-score-box" class="summary-value" style="color: var(--success);">0 / 0</div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+            <h3 style="border-left: 5px solid var(--primary); padding-left: 10px; font-size: 24px;">ประวัติการตอบ</h3>
+            <div style="display: flex; gap: 8px;">
+                <button class="filter-btn active" onclick="filterHistory('all', this)">ทั้งหมด</button>
+                <button class="filter-btn" onclick="filterHistory('correct', this)">ถูก</button>
+                <button class="filter-btn" onclick="filterHistory('wrong', this)">ผิด</button>
+            </div>
+        </div>
+        <div style="overflow-x: auto; margin-top: 10px;">
+            <table style="width:100%; border-collapse: collapse; background: white; text-align: center;">
+                <thead style="background: #f1f3f4; font-size: 20px;">
+                    <tr><th style="padding:15px;">ข้อ</th><th>โจทย์ = เฉลย</th><th>ตอบ</th><th>ผล</th></tr>
+                </thead>
+                <tbody id="history-body" style="font-size: 19px;"></tbody>
+            </table>
+        </div>
+        <button class="btn-start" style="margin-top: 40px;" onclick="window.location.reload()">กลับหน้าหลัก</button>
+        
+        <div class="footer-card">
+            <div class="footer-title">ออกแบบและพัฒนาโดย...</div>
+            <span class="teacher-name">นายซูลกิฟลี ดอเลาะ</span>
+            <div class="teacher-info">ครู โรงเรียนไทยรัฐวิทยา 52 (ชุมชนบ้านต้นไพ)</div>
+            <div class="teacher-info" style="font-weight: bold; color: #1e90ff;">สพป.ปัตตานี เขต 2</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let config = { fullname: "", grade: "", no: "", terms: [], total: 0 };
+    let state = { current: 0, score: 0, answer: 0, history: [], startTime: 0, timerInterval: null };
+    const ops = ['+', '-', '*', '/'];
+    const opDisplay = { '+': '+', '-': '-', '*': '×', '/': '÷' };
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const now = audioCtx.currentTime;
+        const gain = audioCtx.createGain(); gain.connect(audioCtx.destination);
+        const osc = audioCtx.createOscillator(); osc.connect(gain);
+        if (type === 'correct') {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(523, now); osc.frequency.exponentialRampToValueAtTime(1046, now + 0.1);
+            gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+            osc.start(now); osc.stop(now + 0.4);
+        } else if (type === 'wrong') {
+            osc.type = 'square'; osc.frequency.setValueAtTime(110, now);
+            gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+            osc.start(now); osc.stop(now + 0.2);
+        }
+    }
+
+    function toggleTerm(el) { el.classList.toggle('active'); }
+    function selectCount(el) {
+        document.querySelectorAll('.count-chip').forEach(c => c.classList.remove('active'));
+        el.classList.add('active'); config.total = parseInt(el.dataset.count);
+    }
+
+    function checkBeforeStart() {
+        const f = document.getElementById('fullname');
+        const g = document.getElementById('grade');
+        const n = document.getElementById('no');
+        let hasError = false;
+        [f, g, n].forEach(el => {
+            el.classList.remove('error', 'shake');
+            if (!el.value.trim()) { el.classList.add('error', 'shake'); hasError = true; }
+        });
+        config.terms = Array.from(document.querySelectorAll('.term-chip.active')).map(c => parseInt(c.dataset.term));
+        if (!hasError && config.terms.length > 0 && config.total > 0) {
+            config.fullname = f.value.trim(); config.grade = g.value.trim(); config.no = n.value;
+            startExam();
+        } else if (config.terms.length === 0 || config.total === 0 || hasError) {
+            // แก้ไขข้อความ Alert ตามสั่งครับ
+            alert('กรุณากรอกข้อมูลให้ครบครับ');
+        }
+    }
+
+    function startExam() {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        document.getElementById('setup-screen').style.display = 'none';
+        document.getElementById('quiz-screen').style.display = 'block';
+        document.getElementById('total-q-label').innerText = config.total;
+        document.getElementById('quiz-user-display').innerHTML = `<b>${config.fullname}</b><br>ชั้น ${config.grade} เลขที่ ${config.no}`;
+        document.getElementById('quiz-mode-display').innerHTML = `จำนวนพจน์ ${config.terms.join(', ')} พจน์<br>ทั้งหมด ${config.total} ข้อ`;
+        const prog = document.getElementById('stepped-progress'); prog.innerHTML = '';
+        for(let i=0; i<config.total; i++) {
+            let s = document.createElement('div'); s.style.flex='1'; s.style.background='#ddd'; s.id=`step-${i}`; prog.appendChild(s);
+        }
+        state.startTime = Date.now();
+        state.timerInterval = setInterval(() => {
+            let diff = Math.floor((Date.now() - state.startTime) / 1000);
+            document.getElementById('timer').innerText = `${Math.floor(diff/60).toString().padStart(2,'0')}:${(diff%60).toString().padStart(2,'0')}`;
+        }, 1000);
+        nextQ();
+    }
+
+    function nextQ() {
+        state.current++;
+        if (state.current > config.total) return showResult();
+        document.getElementById('current-q-num').innerText = state.current;
+        for(let i=0; i < state.current-1; i++) document.getElementById(`step-${i}`).style.background = 'var(--success)';
+        const problem = genLogic(config.terms[Math.floor(Math.random() * config.terms.length)]);
+        document.getElementById('q-text').innerText = problem.display + " = ?";
+        state.answer = problem.answer; state.currentProblemText = problem.display;
+        const box = document.getElementById('choices-box'); box.innerHTML = '';
+        let ch = new Set([state.answer]);
+        while(ch.size < 6) { let off = Math.floor(Math.random()*31)-15; if(off!==0) ch.add(state.answer+off); }
+        Array.from(ch).sort(()=>Math.random()-0.5).forEach(c => {
+            const b = document.createElement('button'); b.className='choice-btn'; b.innerText=c;
+            b.onclick = () => check(c, b); box.appendChild(b);
+        });
+    }
+
+    function check(val, btn) {
+        document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+        const isCorrect = val === state.answer;
+        if(isCorrect) { btn.classList.add('correct'); playSound('correct'); state.score++; } 
+        else { btn.classList.add('wrong'); playSound('wrong'); 
+            document.querySelectorAll('.choice-btn').forEach(b => { if(parseInt(b.innerText)===state.answer) b.classList.add('correct'); });
+        }
+        state.history.push({ qNum: state.current, question: `${state.currentProblemText} = ${state.answer}`, userAns: val, res: isCorrect });
+        document.getElementById('score-live').innerText = `คะแนน: ${state.score}`;
+        setTimeout(nextQ, 700);
+    }
+
+    function showResult() {
+        clearInterval(state.timerInterval);
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        document.getElementById('final-header-info').innerHTML = `
+            <b>${config.fullname}</b><br>
+            ชั้น: <b>${config.grade}</b> | เลขที่: <b>${config.no}</b>
+        `;
+        document.getElementById('res-terms-box').innerText = config.terms.join(',') + " พจน์";
+        document.getElementById('res-time').innerText = document.getElementById('timer').innerText;
+        document.getElementById('res-score-box').innerText = state.score + " / " + config.total;
+        renderHistoryTable(state.history);
+    }
+
+    function renderHistoryTable(data) {
+        const tbody = document.getElementById('history-body'); tbody.innerHTML = '';
+        data.forEach(h => {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = h.qNum; row.insertCell(1).innerText = h.question; row.insertCell(2).innerText = h.userAns;
+            row.insertCell(3).innerHTML = h.res ? '<b style="color:var(--success)">ถูก</b>' : '<b style="color:var(--danger)">ผิด</b>';
+            row.style.borderBottom = "1px solid #eee";
+        });
+    }
+
+    function filterHistory(type, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+        if(type === 'all') renderHistoryTable(state.history);
+        else if(type === 'correct') renderHistoryTable(state.history.filter(h => h.res));
+        else if(type === 'wrong') renderHistoryTable(state.history.filter(h => !h.res));
+    }
+
+    function genLogic(n) {
+        let pArr = [];
+        let n1 = Math.floor(Math.random() * 101);
+        let prefix = (n1 !== 0 && Math.random() > 0.5) ? "-" : "";
+        let currentResult = parseInt(prefix + n1);
+        pArr.push(prefix + n1);
+        for (let i = 1; i < n; i++) {
+            let op = ops[Math.floor(Math.random() * 4)], nX = 0, attempts = 0;
+            while (attempts < 100) {
+                if (op === '/') {
+                    let divs = []; for(let k=1; k<=100; k++) if(Math.abs(currentResult)%k===0) divs.push(k);
+                    nX = divs[Math.floor(Math.random() * divs.length)] || 1;
+                } else if (op === '*') nX = Math.floor(Math.random() * 13);
+                else nX = Math.floor(Math.random() * 101);
+                let testExp = [...pArr, opDisplay[op], nX].join(' ').replace(/×/g, '*').replace(/÷/g, '/');
+                let tr = eval(testExp);
+                if (tr >= -100 && tr <= 100 && Number.isInteger(tr)) { pArr.push(opDisplay[op], nX); currentResult = tr; break; }
+                attempts++; if (attempts > 50) op = ops[Math.floor(Math.random() * 4)];
+            }
+        }
+        let fDisp = pArr.join(' '), fAns = eval(fDisp.replace(/×/g, '*').replace(/÷/g, '/'));
+        return (fAns < -100 || fAns > 100 || !Number.isInteger(fAns)) ? genLogic(n) : {display: fDisp, answer: fAns};
+    }
+</script>
+</body>
+</html>
