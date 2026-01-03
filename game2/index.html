@@ -2,6 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เกมบวกลบคูณหารระคน (ไม่มีวงเล็บ)</title>
     <style>
         :root { 
@@ -14,8 +15,19 @@
             --header-text: #1565c0;
             --header-border: #90caf9;
         }
-        body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px 0; }
-        .container { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); width: 95%; max-width: 850px; border: 5px solid var(--primary); position: relative; }
+        body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; }
+        
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 24px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
+            width: 100%; 
+            max-width: 850px; 
+            border: 5px solid var(--primary); 
+            position: relative;
+            box-sizing: border-box;
+        }
         
         .sound-toggle { position: absolute; top: 20px; right: 20px; background: #eee; border: none; padding: 10px; border-radius: 50%; cursor: pointer; font-size: 24px; line-height: 1; transition: 0.3s; z-index: 100; }
         .sound-toggle.muted { opacity: 0.5; background: #ddd; }
@@ -54,11 +66,18 @@
             background: #f9f9f9; 
             padding: 20px; 
             border-radius: 15px;
-            white-space: nowrap; 
-            overflow: hidden;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.2;
+            min-height: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
         @media (max-width: 600px) {
-            .question { font-size: 10vw; padding: 15px 10px; }
+            .question { font-size: 12vw; padding: 20px 10px; }
+            .container { padding: 15px; }
         }
 
         .choice-btn { background: #fff; border: 2px solid #ddd; font-size: 32px; padding: 25px 10px; border-radius: 18px; cursor: pointer; font-family: 'Chakra Petch'; box-shadow: 0 4px 0 #ddd; }
@@ -137,7 +156,7 @@
         <div class="footer-card">
             <div class="footer-title">ออกแบบและพัฒนาโดย...</div>
             <span class="teacher-name">นายซูลกิฟลี ดอเลาะ</span>
-            <div class="school-info">ครู โรงเรียนไทยรัฐวิทยา 52 (ชุมชนบ้านต้นพไ)</div>
+            <div class="school-info">ครู โรงเรียนไทยรัฐวิทยา 52 (ชุมชนบ้านต้นไพ)</div>
             <div class="area-info">สพป.ปัตตานี เขต 2</div>
         </div>
     </div>
@@ -210,7 +229,6 @@
     const ops = ['+', '-', '*', '/'];
     const opDisplay = { '+': '+', '-': '-', '*': '×', '/': '÷' };
     
-    // ตั้งค่าไฟล์เสียงตามที่ครูต้องการ
     const sndCorrect = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
     const sndWrong = new Audio('https://assets.mixkit.co/active_storage/sfx/255/255-preview.mp3');
 
@@ -223,13 +241,8 @@
 
     function playSound(type) {
         if (!state.soundEnabled) return;
-        if (type === 'correct') {
-            sndCorrect.currentTime = 0; // เล่นซ้ำได้ทันทีแม้เสียงเก่ายังไม่จบ
-            sndCorrect.play();
-        } else if (type === 'wrong') {
-            sndWrong.currentTime = 0;
-            sndWrong.play();
-        }
+        if (type === 'correct') { sndCorrect.currentTime = 0; sndCorrect.play(); } 
+        else if (type === 'wrong') { sndWrong.currentTime = 0; sndWrong.play(); }
     }
 
     function toggleTerm(el) { el.classList.toggle('active'); }
@@ -239,9 +252,7 @@
     }
 
     function checkBeforeStart() {
-        const f = document.getElementById('fullname');
-        const g = document.getElementById('grade');
-        const n = document.getElementById('no');
+        const f = document.getElementById('fullname'), g = document.getElementById('grade'), n = document.getElementById('no');
         let hasError = false;
         [f, g, n].forEach(el => {
             el.classList.remove('error', 'shake');
@@ -272,6 +283,22 @@
         nextQ();
     }
 
+    function adjustFontSize() {
+        const qEl = document.getElementById('q-text');
+        const text = qEl.innerText;
+        if (text.length > 25) {
+            qEl.style.fontSize = "38px";
+        } else if (text.length > 18) {
+            qEl.style.fontSize = "48px";
+        } else {
+            qEl.style.fontSize = "65px";
+        }
+        if (window.innerWidth < 600) {
+            let currentSize = parseInt(qEl.style.fontSize);
+            qEl.style.fontSize = (currentSize * 0.8) + "px";
+        }
+    }
+
     function nextQ() {
         state.current++;
         if (state.current > config.total) return showResult();
@@ -281,7 +308,11 @@
             if(step) step.style.background = 'var(--success)';
         }
         const problem = genLogic(config.terms[Math.floor(Math.random() * config.terms.length)]);
-        document.getElementById('q-text').innerText = problem.display + " = ?";
+        
+        // แก้ไข: ตัด "= ?" ออกตามคำขอ
+        document.getElementById('q-text').innerText = problem.display;
+        
+        adjustFontSize();
         state.answer = problem.answer; state.currentProblemText = problem.display;
         const box = document.getElementById('choices-box'); box.innerHTML = '';
         let ch = new Set([state.answer]);
@@ -314,11 +345,7 @@
         clearInterval(state.timerInterval);
         document.getElementById('quiz-screen').style.display = 'none';
         document.getElementById('result-screen').style.display = 'block';
-        document.getElementById('final-header-info').innerHTML = `
-            <b>${config.fullname}</b><br>
-            ชั้น: <b>${config.grade}</b> | เลขที่: <b>${config.no}</b><br>
-            วันที่ทำ: <b>${getThaiDate()}</b>
-        `;
+        document.getElementById('final-header-info').innerHTML = `<b>${config.fullname}</b><br>ชั้น: <b>${config.grade}</b> | เลขที่: <b>${config.no}</b><br>วันที่ทำ: <b>${getThaiDate()}</b>`;
         document.getElementById('res-terms-box').innerText = config.terms.join(',') + " พจน์";
         document.getElementById('res-time').innerText = document.getElementById('timer').innerText;
         document.getElementById('res-score-box').innerText = state.score + " / " + config.total;
